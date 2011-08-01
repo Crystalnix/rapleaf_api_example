@@ -34,7 +34,7 @@ class BestConferenceLocation(object):
 		self.__query_emails()		
 		min_avg_name = ''
 		min_avg_dis = sys.float_info.max
-		last_idx, total = 0, 0
+		last_idx, total, prev = 0, 0, 0
 		dest_str, origin_str = '', ''
 		distances = {}		
 		
@@ -47,17 +47,17 @@ class BestConferenceLocation(object):
 				try:
 					last_idx += 1					
 					origin_str += self.answers[idx]['country'] + ',' + self.answers[idx]['city'] + '|'
-					total += 1
-					if last_idx >= self.QUERIES_AT_ONCE - 1: 
+					prev += 1
+					if prev >= self.QUERIES_AT_ONCE - 1: 
 						break
 				except KeyError, e:
 					pass
-			print last_idx, total
-
+			total += prev
+			prev = 0
 			google_response = urllib.urlopen(self.google_distance % (origin_str, dest_str))
-			self.origin_str = ''
+			origin_str = ''
 			json_response = json.loads(google_response.read())
-			pprint.pprint(json_response)
+			#pprint.pprint(json_response)
 
 			for i in xrange(len(json_response['destination_addresses'])):			
 				for k in xrange(len(json_response['origin_addresses'])):
@@ -67,7 +67,6 @@ class BestConferenceLocation(object):
 							distances[json_response['destination_addresses'][i]] += dist	
 						else:
 							distances[json_response['destination_addresses'][i]] = dist
-			print distances
 			sleep(10) # Google Matrix API's restriction -- no more than 100 queries per 10 seconds
 
 
