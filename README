@@ -1,0 +1,16 @@
+Simple Rapleaf API (https://www.rapleaf.com/) example. Every year there is Boost Con
+conference in USA, Colorado for active boost developers. I took ~500 most active developers
+from boost-devel mailing list and wrote python module which calculates average distance between
+them with help of Google Distance Matrix API (http://code.google.com/apis/maps/documentation/distancematrix/).
+
+All you need to provide to the application is list of places where conference is considered to take place,
+one place per line (see file dest for example).
+
+1. Dependencies 
+	pip install rapleafApi
+
+2. Usage Example
+	>>> import BestConferenceLocation
+	>>> result = BestConferenceLocation('./emails').match('./dest')
+	>>> print result
+		('New York, NY, USA', 642.756444)
